@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reiniciar Base de Datos</title>
+    <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+
+    <header style="position: relative;">
+        <img src="/assets/logo.png" alt="Logo" style="position: absolute; top: 20px; left: 15px; width: 120px; height: 40px;">
+            <div style="text-align: right">
+                <button onclick="location.href='/'" class="button-blue" style="margin-bottom: 2px; text-align: right">Inicio</button>
+                <button onclick="location.href='https://taskhub-jotaleaex-repl-co.translate.goog/?_x_tr_sl=es&_x_tr_tl=en&_x_tr_hl=en'" class="button-blue" style="margin-bottom: 2px; text-align: right">English version</button>
+            </div>
+    </header>
+
+    <div id="cookie-banner">
+        Esta página usa cookies. <button onclick="aceptarCookies()">Acepto</button>
+    </div>
+  
+    <div class="container">
+        <h1>BORRAR TODA LA BASE DE DATOS<a href="/" style="float: right;">Volver</a></h1>
+        <form action="/api/reset" method="post">
+            <label for="password">Contraseña:</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit" class="button-blue">Enviar</button>
+        </form>
+        {{ resultado }}
+    </div>
+</body>
+</html>
