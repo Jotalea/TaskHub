@@ -1,6 +1,6 @@
 # TaskHub (Español)
 
-## [Read english version](https://github.com/Jotalea/TaskHub#read-english-version)
+## [Read english version](https://github.com/Jotalea/TaskHub#taskhub-english)
 
 ---------------------------------------
 
