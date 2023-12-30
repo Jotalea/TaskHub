@@ -4,6 +4,7 @@ body {
     margin: 0;
     padding: 0;
     color: #fff; /* Text color */
+    transition: background-color 0.5s ease;
 }
 
 header {
@@ -30,11 +31,11 @@ h1, h2 {
 }
 
 h1 {
-    color: #fc9421; /* Orange header text color */
+    color: #fc9421;
 }
 
 h2 {
-    color: #ffffff; /* Cambiado a blanco */
+    color: #ffffff;
     text-align: center;/*
     background-color: #ff8800;  Naranja */
     padding: 8px;
@@ -53,6 +54,7 @@ a {
 strong {
     color: #ffffff;
 }
+
 form {
     display: flex;
     flex-direction: column;
@@ -65,30 +67,43 @@ label {
 select,
 textarea,
 input[type="password"],
-input[type="text"],
-input[type="submit"],
-.button-blue {
-    padding: 8px;
+input[type="text"] {
+    padding: 10px;
     margin-bottom: 16px;
-    border: 1px solid #555; /* Dark gray border */
+    border: 1px solid #555555;
     border-radius: 4px;
     font-size: 16px;
-    background-color: #333; /* Dark gray background */
-    color: #fff; /* Text color */
+    background-color: #333333;
+    color: #ffffff;
+    cursor: text;
 }
 
+input[type="submit"],
 input[type="file"] {
     padding: 10px;
     margin-bottom: 16px;
-    border: 1px solid #ccc;
+    border: 1px solid #555555;
     border-radius: 4px;
     font-size: 16px;
-    background-color: #f8f8f8; /* Color de fondo más claro */
+    background-color: #333333;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.button-blue {
+    padding: 8px;
+    margin-bottom: 16px;
+    border: 1px solid #555555;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: #333333;
+    color: #ffffff;
+    cursor: pointer;
 }
 
 input[type="submit"]:hover,
 .button-blue:hover {
-    background-color: #fc9421; /* Darker orange on hover */
+    background-color: #fc9421;
 }
 
 @media (max-width: 600px) {
@@ -112,6 +127,7 @@ img {
     color: #fff;
     padding: 10px;
     text-align: center;
+    box-shadow: 1px -3px 1px rgba(0, 0, 0, 0.2);
 }
 
 #cookie-banner button {
@@ -164,4 +180,63 @@ audio {
 .loader-container.hidden {
     opacity: 0;
     pointer-events: none;
+}
+
+#ventanaEmergente {
+    position: fixed;
+    background-color: #000000;
+    border: 1px solid #333333;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+}
+
+.oculto {
+    display: none;
+}
+
+#cerrarBtn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.right-text {
+    text-align: right;
+}
+
+.notification {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(64, 64, 64, 0.9);
+    border: 1px solid #383838;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+    z-index: 1000;
+    transition: top 0.5s ease;
+    backdrop-filter: blur(5px);
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+.notification:hover {
+    background-color: rgba(72, 72, 72, 0.8);
+}
+
+.close-btn {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.noselect {
+    -webkit-user-select: none; /* Chrome, Safari, Opera */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE/Edge */
+    user-select: none;
 }
