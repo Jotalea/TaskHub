@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tareas</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #333333; /* Dark background */
+            margin: 0;
+            padding: 0;
+            color: #fff; /* Text color */
+            transition: background-color 0.5s ease;
+        }
+
+        header {
+            background-color: #2e2e2e; /* Darker background */
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 20px auto;
+            background-color: #333; /* Dark container background */
+            padding: 20px;
+        }
+
+        h1, h2, p {
+            margin-bottom: 16px;
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        h1 {
+            color: #fc9421;
+        }
+
+        h2 {
+            color: #ffffff;
+            text-align: center;/*
+            background-color: #ff8800;  Naranja */
+            padding: 8px;
+            border-radius: 4px;
+        }
+
+        p {
+            color: #ccc; /* Light gray text color */
+        }
+
+        a {
+            color: #0099cc; /* Cambiado a un tono azul */
+            text-decoration: none;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 8px;
+        }
+
+        select,
+        textarea,
+        input[type="password"],
+        input[type="text"] {
+            padding: 10px;
+            margin-bottom: 16px;
+            border: 1px solid #555555;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: #333333;
+            color: #ffffff;
+            cursor: text;
+        }
+
+        input[type="submit"],
+        input[type="file"] {
+            padding: 10px;
+            margin-bottom: 16px;
+            border: 1px solid #555555;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: #333333;
+            color: #ffffff;
+            cursor: pointer;
+        }
+
+        .button-blue {
+            padding: 8px;
+            margin-bottom: 16px;
+            border: 1px solid #555555;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: #333333;
+            color: #ffffff;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover,
+        .button-blue:hover {
+            background-color: #fc9421;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <form method="POST" action="/api/upload" enctype="multipart/form-data">
+            <label for="materia">Materia:</label>
+            <select name="materia" id="materia">
+                <option value="Matemática">Matemática</option>
+                <option value="Música">Música</option>
+                <option value="Biología">Biología</option>
+                <option value="Prácticas del lenguaje">Prácticas del lenguaje</option>
+                <option value="Inglés">Inglés</option>
+                <option value="Ciudadanía">Ciudadanía</option>
+                <option value="Educación Física">Educación Física</option>
+                <option value="Fisico-Química">Fisico-Química</option>
+                <option value="Geografía">Geografía</option>
+                <option value="Historia">Historia</option>
+            </select>
+            <br>
+            <label for="respuesta">Respuesta:</label>
+            <textarea name="respuesta" id="respuesta" rows="4" cols="50" required></textarea>
+
+            <label for="username">Nombre de Usuario y título:</label>
+            <textarea name="username" id="username" rows="1" cols="50" required></textarea>
+
+            <label for="imagen">Seleccionar imagen:</label>
+            <input type="file" name="file" accept="image/*">
+            <br>
+
+            <button class="button-blue" type="submit">Publicar</button>
+        </form>
+    </div>
+    <script src="/assets/script.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('form').submit(function () {
+                // Get the content of the textarea
+                var respuesta = $('#respuesta').val();
+
+                // Replace line breaks with <br>
+                respuesta = respuesta.replace(/\n/g, '<br>');
+
+                // Set the new content to the textarea
+                $('#respuesta').val(respuesta);
+
+                // Continue with form submission
+                return true;
+            });
+        });
+    </script>
+</body>
+</html>

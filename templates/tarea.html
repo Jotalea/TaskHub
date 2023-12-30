@@ -13,16 +13,101 @@
     <meta property="og:description" content="Un lugar para publicar las respuestas de las tareas" />
     <meta property="og:image" content="/assets/logo.png" />
     <meta name="twitter:card" content="summary" />
+    <link rel="icon" href="/assets/icon.png">
     <link rel="stylesheet" href="/assets/style.css">
 </head>
 
 <body>
+    <script>
+        // Función para mostrar el contenido después de que el video termine
+        function mostrarContenido() {
+            var video = document.getElementById("miVideo");
+            var opacity = 1;
+
+            // Desvanecer suavemente el video
+            var fadeOutInterval = setInterval(function () {
+                if (opacity > 0) {
+                    opacity -= 0.25; // Puedes ajustar la velocidad del desvanecimiento cambiando este valor
+                    video.style.opacity = opacity;
+                } else {
+                    clearInterval(fadeOutInterval);
+                    // Ocultar el video
+                    video.style.display = "none";
+                    // Cambiar el color del fondo
+                    document.body.style.backgroundColor = "#1e1e1e";
+                    // Mostrar el contenido principal
+                    document.getElementById("contenido").style.display = "block";
+                }
+            }, 100); // 100 milisegundos entre cada paso del desvanecimiento
+        }
+
+        // Función para activar pantalla completa
+        function activarPantallaCompleta() {
+            var video = document.getElementById("miVideo");
+
+            if (video.requestFullscreen) {
+                video.requestFullscreen();
+            } else if (video.mozRequestFullScreen) { // Firefox
+                video.mozRequestFullScreen();
+            } else if (video.webkitRequestFullscreen) { // Chrome, Safari y Opera
+                video.webkitRequestFullscreen();
+            } else if (video.msRequestFullscreen) { // Internet Explorer/Edge
+                video.msRequestFullscreen();
+            }
+        }
+
+        // Función para configurar y mostrar el video
+        function configurarYMostrarVideo() {
+            // Obtener el tamaño de la pantalla
+            var screenWidth = window.innerWidth;
+            var screenHeight = window.innerHeight;
+
+            // Crear el elemento de video dinámicamente
+            var video = document.createElement("video");
+            video.id = "miVideo";
+            video.width = screenWidth;
+            video.height = screenHeight;
+            video.autoplay = true;
+            video.onended = mostrarContenido;
+
+            // Añadir fuente de video
+            var source = document.createElement("source");
+            source.src = "/assets/intro.mp4"; // Reemplazar con la ruta correcta
+            source.type = "video/mp4";
+            video.appendChild(source);
+
+            // Añadir video al cuerpo del documento
+            document.body.appendChild(video);
+
+            // Cambiar el color del fondo
+            document.body.style.backgroundColor = "#000000";
+
+            // Activar pantalla completa
+            activarPantallaCompleta();
+        }
+
+        // Llamar a la función para configurar y mostrar el video
+        configurarYMostrarVideo();
+    </script>
+    
+    <div id="contenido" style="display: none;">
+    <div id="ventanaEmergente" class="oculto">
+        <span id="cerrarBtn" onclick="cerrarVentana()">⨯</span>
+        <form method="POST" action="{{ url_for('borrar_tarea', id_tarea=tarea[0]) }}">
+            <label for="contrasena">Contraseña:</label>
+            <input type="password" name="contrasena" required>
+            <button type="submit" class="button-blue">Borrar Tarea</button>
+        </form>
+    </div>
+    
     <header style="position: relative;">
-        <img src="/assets/logo.png" alt="Logo" style="position: absolute; top: 20px; left: 15px; width: 120px; height: 40px;">
+        <a href="/">
+            <img src="/assets/logo.png" alt="Logo" style="position: absolute; top: 20px; left: 15px; width: 120px; height: 40px;">
+        </a>
             <div style="text-align: right">
-                <button onclick="location.href='/'" class="button-blue" style="margin-bottom: 2px; text-align: right">Inicio</button>
                 <button onclick="location.href='https://taskhub-jotaleaex-repl-co.translate.goog/?_x_tr_sl=es&_x_tr_tl=en&_x_tr_hl=en'" class="button-blue" style="margin-bottom: 2px; text-align: right">English version</button>
             </div>
+        <img src="https://yip.su/RNFWd1.png"></img>
     </header>
 
     <div id="cookie-banner">
@@ -30,58 +115,57 @@
     </div>
   
     <div class="container">
-        <h1>{{ tarea[1] }} - {{ fecha_formateada }}<a href="/" style="float: right;">Volver</a></h1>
+        <h1>{{ tarea[1] }} - {{ fecha_formateada }}</h1>
+        <h1><button onclick="window.location.href = '/'" class="button-blue" style="float: right; margin-left: 4px;">Volver</button><button id="mostrarBtn" onclick="mostrarVentana()" class="button-blue" style="float: right;">Borrar tarea</button></h1>
+        
+        
         <h2>Por {{ tarea[3] }}</h2>
         <div class="container" style="max-width: 95%; padding: 10px; background-color: #444444; text-align: center;">
-          <div class="image-container"> {% if tarea[5] %} {% set image_filename = tarea[5].split('/')[-1] %} <img src="/imagenes/{{ tarea[5] }}" alt="Imagen de la tarea"> {% endif %} </div>
+          <div class="image-container"> {% if tarea[5] %} {% set image_filename = tarea[5].split('/')[-1] %} <img src="/imagenes/{{ tarea[5] }}" alt="No se ha podido cargar la imagen o no hay imagen adjuntada"> {% endif %} </div>
         </div>
         <div class="container" style="max-width: 95%; padding: 10px; background-color: #444444;">
             <p><br>{{ tarea[2] | safe }}</p>
         </div>
-        <br><br><br><br><br><br><br><br><br><br>
-        <form method="POST" action="{{ url_for('borrar_tarea', id_tarea=tarea[0]) }}">
-            <label for="contrasena">Contraseña para borrar:</label>
-            <input type="password" name="contrasena" required>
-            <button type="submit">Borrar Tarea</button>
-        </form>
-        <p class="right_p">{{ tarea[4] }} - {{ tarea[0] }}</p>
-        <button onclick="copyToClipboard">Compartir</button>
-    </div>
+        <p class="right-text">{{ tarea[4] }} - {{ tarea[0] }} <button onclick="const ID = '{{ tarea[0] }}'; const materia = '{{ tarea[1] }}'; compartir(ID, materia)" class="button-blue">Compartir</button></p>
+    </div><!--
+    <div id="inputDialog">
+        <h2>Detalles de la operacion:</h2>
+        <label class="label">Monto:</label>
+        <input
+            type="number"
+            id="inputDiff"
+            class="input"
+            min="0"
+            step="50"
+        /><br />
+        <label class="label">Nombre:</label>
+        <input type="text" id="inputName" class="input" /><br />
+        <button onclick="acceptInput()" class="button">Aceptar</button>
+        <button onclick="cancelInput()" class="button">Cancelar</button>
+    </div>-->
     <script>
-        function copyToClipboard() {
-            var dummyElement = document.createElement("textarea");
-            document.body.appendChild(dummyElement);
-            dummyElement.value = window.location.href;
-            dummyElement.select();
-            document.execCommand("copy");
-            document.body.removeChild(dummyElement);
-            alert("Link copied to clipboard!");
-        }
-    </script>
-    <script>
-        // Function to accept cookies and hide the banner
-        function aceptarCookies() {
-            document.getElementById('cookie-banner').style.display = 'none';
-            // Save a cookie indicating that the user accepted cookies
-            document.cookie = "cookiesAceptadas=true; expires=Thu, 31 Dec 2030 23:59:59 UTC; path=/";
+        function openInputDialog() {
+          var dialog = document.getElementById("inputDialog");
+          dialog.style.display = "block";
         }
 
-        // Check if the user has already accepted cookies
-        function verificarCookiesAceptadas() {
-            const cookies = document.cookie.split("; ");
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].split("=");
-                if (cookie[0] === "cookiesAceptadas" && cookie[1] === "true") {
-                    // User already accepted cookies, hide the banner
-                    document.getElementById('cookie-banner').style.display = 'none';
-                    break;
-                }
-            }
+        function acceptInput() {
+          diff = parseFloat(document.getElementById("inputDiff").value) || 0;
+          name = document.getElementById("inputName").value || "test";
+          updateMoney();
+          var dialog = document.getElementById("inputDialog");
+          dialog.style.display = "none";
+          resetInputs();
         }
 
-        // Check cookies on page load
-        verificarCookiesAceptadas();
+        function cancelInput() {
+          var dialog = document.getElementById("inputDialog");
+          dialog.style.display = "none";
+          resetInputs();
+        }
     </script>
+    <script src="/assets/script.js"></script>
     <br><br>
+    </div>
 </body>
 </html>

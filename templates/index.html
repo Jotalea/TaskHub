@@ -15,14 +15,18 @@
     <meta name="twitter:card" content="summary" />
     <link rel="icon" href="/assets/icon.png">
     <link rel="stylesheet" href="/assets/style.css">
+    <meta name=keywords content="taskhub, respuestas, respuestas de tarea, tarea, chatgpt, IA tareas, inteligencia artificial tareas, resuelve tareas, programación, desarrollo, codigo, escuela, educación, colegio, deberes, estudio"/>
+    <link rel=alternate href="https://taskhub.jotaleaex.repl.co/" hreflang=x-default />
+    <link rel=alternate href="https://taskhub-jotaleaex-repl-co.translate.goog/?_x_tr_sl=es&_x_tr_tl=en&_x_tr_hl=en" hreflang=en />
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
 
-<body onload="toggleModoOscuro()">
+<body style="overflow: hidden">
     <header style="position: relative;">
-        <img src="/assets/logo.png" alt="Logo" style="position: absolute; top: 20px; left: 15px; width: 120px; height: 40px;">
+        <a href="/">
+            <img src="/assets/logo.png" alt="Logo" style="position: absolute; top: 20px; left: 15px; width: 120px; height: 40px;">
+        </a>
             <div style="text-align: right">
-                <button onclick="location.href='/'" class="button-blue" style="margin-bottom: 2px; text-align: right">Inicio</button>
                 <button onclick="location.href='https://taskhub-jotaleaex-repl-co.translate.goog/?_x_tr_sl=es&_x_tr_tl=en&_x_tr_hl=en'" class="button-blue" style="margin-bottom: 2px; text-align: right">English version</button>
             </div>
     </header>
@@ -35,10 +39,12 @@
         <div class="loader"></div>
     </div>
 
+    <img src="https://yip.su/RNFWd1.png"></img>
+
     <h1 id="upload">Publicar Respuestas de Tareas</h1>
 
     <div class="container">
-        <form method="POST" action="/" enctype="multipart/form-data">
+        <form method="POST" action="/api/upload" enctype="multipart/form-data">
             <label for="materia">Materia:</label>
             <select name="materia" id="materia">
                 <option value="Matemática">Matemática</option>
@@ -56,7 +62,7 @@
             <label for="respuesta">Respuesta:</label>
             <textarea name="respuesta" id="respuesta" rows="4" cols="50" required></textarea>
 
-            <label for="username">Nombre de Usuario:</label>
+            <label for="username">Nombre de Usuario y título:</label>
             <textarea name="username" id="username" rows="1" cols="50" required></textarea>
 
             <label for="imagen">Seleccionar imagen:</label>
@@ -65,10 +71,13 @@
 
             <button class="button-blue" type="submit">Publicar</button>
         </form>
+        <!--
+        <iframe src="https://taskhub.jotaleaex.repl.co/post" height="85%" width="85%" scrolling="yes" style="border:0px #ffffff none;"></iframe>
+        -->
     </div>
 
     <div class="container" id="posts">
-        <h2>Tareas Publicadas (las mas recientes arriba) <a href="/#posts" onclick="location.reload()">⟳</a></h2>
+        <h2>Tareas Disponibles <a href="/#posts" onclick="location.reload()">⟳</a></h2>
         <ul>
             {% for tarea in tareas_nuevas %}
             <li>
@@ -96,68 +105,7 @@
     <div class="container" id="danger">
         <h2><a href="/api/reset">Reset Database</a></h2>
     </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Simula el tiempo de carga (puedes eliminar esto en un entorno real)
-            setTimeout(function () {
-                const loaderContainer = document.querySelector(".loader-container");
-                loaderContainer.classList.add("hidden");
-            }, 2000); // Tiempo de carga simulado: 2 segundos
-        });
-    </script>
-    <script>
-        // Function to accept cookies and hide the banner
-        function aceptarCookies() {
-            document.getElementById('cookie-banner').style.display = 'none';
-            // Save a cookie indicating that the user accepted cookies
-            document.cookie = "cookiesAceptadas=true; expires=Thu, 31 Dec 2030 23:59:59 UTC; path=/";
-        }
-
-        // Check if the user has already accepted cookies
-        function verificarCookiesAceptadas() {
-            const cookies = document.cookie.split("; ");
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].split("=");
-                if (cookie[0] === "cookiesAceptadas" && cookie[1] === "true") {
-                    // User already accepted cookies, hide the banner
-                    document.getElementById('cookie-banner').style.display = 'none';
-                    break;
-                }
-            }
-        }
-
-        // Check cookies on page load
-        verificarCookiesAceptadas();
-    </script>
-
-    <script>
-        // Assume this is the function executed on page load
-        function cargarPagina() {
-            // Check if there is a username saved in the cookie
-            const nombreUsuario = obtenerNombreUsuario();
-            if (nombreUsuario) {
-                // Autofill the form
-                document.getElementById('username').value = nombreUsuario;
-            }
-        }
-
-        // Function to save the username in the cookie
-        function guardarNombreUsuario(nombreUsuario) {
-            document.cookie = `nombreUsuario=${nombreUsuario}; expires=Thu, 31 Dec 2030 23:59:59 UTC; path=/`;
-        }
-
-        // Function to get the username from the cookie
-        function obtenerNombreUsuario() {
-            const cookies = document.cookie.split("; ");
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].split("=");
-                if (cookie[0] === "nombreUsuario") {
-                    return cookie[1];
-                }
-            }
-            return null;
-        }
-    </script>
+    <script src="/assets/script.js"></script>
     <script>
         $(document).ready(function () {
             $('form').submit(function () {
