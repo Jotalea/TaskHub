@@ -15,41 +15,13 @@ def get_db_connection():
     return sqlite3.connect('tareas.db')
 
 # Ruta principal
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET'])
 def index():
     archivo = "tareas.db"
 
     if not os.path.exists(archivo):
         from createdb import createdb as cdb
         cdb("tareas")
-
-    if request.method == 'POST':
-        materia = request.form['materia']
-        respuesta = request.form['respuesta']
-        username = request.form['username']
-
-        conn = get_db_connection()
-        cursor = conn.cursor()
-
-        # Obtener el último ID de manera más eficiente
-        current_id = cursor.execute("SELECT seq FROM sqlite_sequence WHERE name='tareas'").fetchone()[0]
-
-        # Manejar la imagen desde la solicitud POST
-        filename = "none.png"
-        if 'file' in request.files:
-            file = request.files['file']
-            if file.filename != '' and '.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS:
-                filename = secure_filename(file.filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], f"{current_id}.{filename.rsplit('.', 1)[1].lower()}"))
-        else:
-            pass
-
-        cursor.execute('''
-            INSERT INTO tareas (materia, respuesta, usuario, imagen_path) VALUES (?, ?, ?, ?)
-        ''', (materia, respuesta, username, f"{current_id}.{filename.rsplit('.', 1)[1].lower()}" if 'file' in locals() else None))
-
-        conn.commit()
-        conn.close()
 
     with get_db_connection() as conn:
         cursor = conn.cursor()
@@ -83,6 +55,47 @@ def tarea_detalle(id_tarea):
 def reset():
     return render_template('reset.html')
 
+@app.route('/post')
+def postpage():
+    return render_template('post.html')
+
+#https://iplogger.org/es/logger/uuKm4B1uYE8L/
+@app.route('/api/logger')
+def logger():
+    site = """<html><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>IP Logger</title></head><body><a href="https://iplogger.org/es/logger/uuKm4B1uYE8L/">IP Logger</a></body></html>"""
+    return site
+
+@app.route('/api/upload', methods=['POST'])
+def api_upload():
+    if request.method == 'POST':
+        materia = request.form['materia']
+        respuesta = request.form['respuesta']
+        username = request.form['username']
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # Obtener el último ID de manera más eficiente
+        current_id = cursor.execute("SELECT seq FROM sqlite_sequence WHERE name='tareas'").fetchone()[0]
+
+        # Manejar la imagen desde la solicitud POST
+        filename = "none.png"
+        if 'file' in request.files:
+            file = request.files['file']
+            if file.filename != '' and '.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS:
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], f"{current_id}.{filename.rsplit('.', 1)[1].lower()}"))
+            else:
+                pass
+        cursor.execute('''
+          INSERT INTO tareas (materia, respuesta, usuario, imagen_path) VALUES (?, ?, ?, ?)
+      ''', (materia, respuesta, username, f"{current_id}.{filename.rsplit('.', 1)[1].lower()}" if 'file' in locals() else None))
+
+        conn.commit()
+        conn.close()
+        return redirect(url_for('index'))
+      
 @app.route('/api/reset', methods=['POST', 'GET'])
 def resetdata():
     if request.method == 'POST':
@@ -100,7 +113,7 @@ def resetdata():
         os.remove("tareas.db")
         return render_template('reset.html', result="Base de datos reiniciada.")
     elif request.method == 'GET':
-        return render_template('reset.html', result=None)
+        return render_template('reset.html', result="")
 
 @app.route('/api/delete/<int:id_tarea>', methods=['POST'])
 def borrar_tarea(id_tarea):
